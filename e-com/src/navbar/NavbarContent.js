@@ -9,20 +9,30 @@ import { IconContext } from "react-icons";
 import { TbShoppingCartPlus } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import "/Users/vigneshwarangnanavel/Desktop/e-commerce/e-com/src/navbar/NavbarContent.css";
-import { useEffect, useState } from "react";
-const NavBar = (props) => {
-  const count1 = props.count;
-  console.log(count1);
+import { useEffect, useState, useContext } from "react";
+import UserContext from "../bodyContent/main.js";
+const NavBar = ({ cartItems, searchHandler }) => {
+  // const count1 = props.count;
+  console.log(cartItems.length);
   const search = () => {
     console.log("Searching......");
   };
+  const changeHandler = (event) => {
+    searchHandler(event.target.value);
+  };
+
   return (
     <>
       <Navbar expand="lg" className="navbar">
         <Container>
-          <Navbar.Brand href="/">
+          <Navbar.Brand>
             <h2 className="shopping">
-              ShoppingApp
+              <Link
+                to="/main"
+                style={{ textDecoration: "none", color: "white" }}
+              >
+                ShoppingApp
+              </Link>
               <AiOutlineShoppingCart />
             </h2>
           </Navbar.Brand>
@@ -40,6 +50,7 @@ const NavBar = (props) => {
                   placeholder="Search"
                   className="m-2"
                   aria-label="Search"
+                  onChange={changeHandler}
                 />
                 <IconContext.Provider value={{ color: "white", size: "31px" }}>
                   {" "}
@@ -53,11 +64,17 @@ const NavBar = (props) => {
                   to="/cart"
                   style={{ textDecoration: "none", color: "white" }}
                 >
-                  <span> Cart {count1}</span>
+                  <span>
+                    {" "}
+                    Cart {cartItems.length === 0 ? "" : cartItems.length}
+                  </span>
                 </Link>
               </p>
               <button className="login">
-                <Link style={{ textDecoration: "none" }} to="/login">
+                <Link
+                  style={{ textDecoration: "none", color: "black" }}
+                  to="/login"
+                >
                   Login
                 </Link>
               </button>

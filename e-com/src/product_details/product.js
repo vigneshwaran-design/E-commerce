@@ -1,34 +1,45 @@
 import React from "react";
 import apple1 from "../images/apple1.jpeg";
 import "./product_details.css";
-import { Link } from "react-router-dom";
-const Product = () => {
+import { Link, useLocation } from "react-router-dom";
+const Product = ({ handleAddProduct }) => {
+  const location = useLocation();
+  const items = location.state;
+  console.log(items);
   return (
     <div className="container product_details">
       <div className="product_content">
         <div className="product_left">
-          <img src={apple1} alt="item-sample" className="" />
+          <img src={items.thumbnail} alt="item-sample" className="" />
           <div className="product_left_btn">
             <button className="back">
               {" "}
-              <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+              <Link
+                to="/main"
+                style={{ textDecoration: "none", color: "white" }}
+              >
                 Back
               </Link>
             </button>
-            <button className="add_to_cart">Add to cart</button>
+            <button
+              className="add_to_cart"
+              onClick={() => handleAddProduct(items)}
+            >
+              Add to cart
+            </button>
           </div>
         </div>
         <div className="product_right">
-          <h1>Product Name</h1>
-          <h3>Display</h3>
-          <h3>Battery</h3>
-          <h4>Memory</h4>
+          <h1>{items.title}</h1>
+          <h5>Rating: {items.rating}⭐️</h5>
+          <h5>Brand: {items.brand}</h5>
+          <h5>Price: {items.price}</h5>
           <br />
           <br />
           <br />
           <br />
-          <h2>Price</h2>
-          <h5>Description</h5>
+          {/* <h2>Price</h2> */}
+          <h5>{items.description}</h5>
         </div>
       </div>
     </div>

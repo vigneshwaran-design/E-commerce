@@ -46,7 +46,7 @@ export default function SignUpPage() {
       </form>
       <footer>
         <p>
-          <Link to="/">Back to Homepage</Link>.
+          <Link to="/main">Back to Homepage</Link>.
         </p>
       </footer>
     </div>

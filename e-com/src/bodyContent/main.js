@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import { Link } from "react-router-dom";
 // import Link from "react-router-dom";
 import axios from "axios";
@@ -10,12 +10,11 @@ import ListGroup from "react-bootstrap/ListGroup";
 import "./main.css";
 import profile from "../images/profile.jpeg";
 import NavBar from "../navbar/NavbarContent.js";
-
+export const UserContext = createContext(null);
 const url = "https://dummyjson.com/products";
-const Main = () => {
+const Main = ({ handleAddProduct, active, filterValue }) => {
   const [data, setData] = useState();
-  const [cart, setCart] = useState(0);
-
+  const [disabled, setdisabled] = useState();
   useEffect(() => {
     axios.get(url).then((response) => {
       setData(
@@ -30,50 +29,65 @@ const Main = () => {
       );
     });
   }, []);
-  function addtocart() {
-    setCart(cart + 1);
-    <NavBar count={cart} />;
-    console.log(cart);
-  }
+  // function addtocart() {
+  //   setCart(cart + 1);
+  //   console.log(cart);
+  // }
   return (
     <div className="background">
       <div className="background-sub">
         <Carousel className="carousel">
           {data?.map((e) => (
             <Carousel.Item className="slider">
-              <img className="d-block" src={e.images[0]} alt="First slide" />
-              <Carousel.Caption>
-                <h3>{e.title}</h3>
+              <img className="d-block" src={e.thumbnail} alt="First slide" />
+              <Carousel.Caption
+                style={{ color: "black", fontWeight: "bolder" }}
+              >
+                <h1>{e.title}</h1>
                 <p>{e.description}</p>
               </Carousel.Caption>
             </Carousel.Item>
           ))}
         </Carousel>
         <div className="part2">
-          {data?.map((item) => (
-            <Card style={{ width: "18rem" }}>
-              <Link to="/product">
-                <Card.Img variant="top" src={item.images[0]} />
-              </Link>
-              <Card.Body>
-                <Card.Title>{item.title}</Card.Title>
-                <Card.Text style={{ height: "37px" }}>
-                  {item.description}
-                </Card.Text>
-              </Card.Body>
-              <ListGroup className="list-group-flush">
-                <ListGroup.Item>
-                  <p>$.{item.price}</p>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <p>Rating:{item.rating}</p>
-                </ListGroup.Item>
-                <ListGroup.Item className="list">
-                  <Button onClick={addtocart}>Add To Cart</Button>
-                </ListGroup.Item>
-              </ListGroup>
-            </Card>
-          ))}
+          {data
+            ?.filter((items) => items.title.includes(filterValue))
+            .map((item, index) => (
+              <Card style={{ width: "18rem" }}>
+                <Link to="/product" state={item}>
+                  <Card.Img
+                    style={{ height: "220px" }}
+                    variant="top"
+                    src={item.thumbnail}
+                  />
+                </Link>
+                <Card.Body>
+                  <Card.Title>{item.title}</Card.Title>
+                  <Card.Text style={{ height: "37px" }}>
+                    {item.description}
+                  </Card.Text>
+                </Card.Body>
+                <ListGroup className="list-group-flush">
+                  <ListGroup.Item>
+                    <p>$.{item.price}</p>
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <p>Rating:{item.rating}</p>
+                  </ListGroup.Item>
+                  <ListGroup.Item className="list">
+                    <Button
+                      disabled={disabled}
+                      onClick={() => handleAddProduct(item)}
+
+                      // onClick={() => setdisabled(true)}
+                    >
+                      Add To Cart
+                      {/* {active ? "Addtocart" : "Added"} */}
+                    </Button>
+                  </ListGroup.Item>
+                </ListGroup>
+              </Card>
+            ))}
         </div>
       </div>
     </div>
